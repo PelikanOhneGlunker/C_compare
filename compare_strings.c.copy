@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define REQ_LEN 64
+
+char *err = "only pass sha256sum strings"
+
+int validate_input(const char *str) {
+    if (!str) return 0;
+    if ((int)strlen(str) != REQ_LEN) return 0;
+    for (int i = 0; i < REQ_LEN; ++i) {
+        char c = str[i];
+        if (!( (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') )) return 0;
+    }
+    return 1;
+}
+
+
+
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <64-char-lowercase-or-digit-string> <64-char-lowercase-or-digit-string>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+    const char *s1 = argv[1];
+    const char *s2 = argv[2];
+    if (validate_input(s1) && validate_input(s2)) {
+        printf(err)
+    } else {
+        for (char *p = s2; p < s2 + LEN; ++p) putchar(*p ? *p : '.');
+	putchar('\n');
+    }
+    return 0;
+}
+
