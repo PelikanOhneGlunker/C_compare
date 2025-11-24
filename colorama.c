@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 void pri(uint64_t col, char *text);
@@ -7,7 +8,7 @@ void toStr(uint64_t value, char **hex_string);
 void expandString(uint8_t nrOfChars, char c);
 void drawEinruekung(uint8_t len);
 void drawLine(uint8_t len);
-void drawBr(uint8_t len);
+void drawBreaks(uint8_t len);
 
 void pri(uint64_t col, char *ptext) {
     uint8_t line = (col >> 60) & 0xFF;// 4Bit für linie zeichen
@@ -44,8 +45,8 @@ void drawLine(uint8_t len) {
     expandString(len, '-');
 }
 
-void drawBr(uint8_t len) {
-    expandString(len, '\n')
+void drawBreaks(uint8_t len) {
+    expandString(len, '\n');
 }
 
 void expandString(uint8_t nrOfChars, char c) {
@@ -64,8 +65,9 @@ int main() {
     uint64_t green_shell  = 0xFFFFFF0FF0000223;
     uint64_t light_green  = 0xFFFFFF6FF6600333;
     uint64_t neon_green   = 0xFFF0000FF3300003;
-    uint64_t custom_color = 0x000000CC99001122;
-    uint64_t bitshifting  = (0x0000000000000000 >> 40) & 0xFF;
+    uint64_t custom_col_2 = 0x000000CC99001122;
+    uint64_t bitshifting  = ((uint64_t)0x0 << 40) | 0xFF;
+    uint64_t currrrrrrrr  = 0x00000000FFFF0000;
     char *list[8];
     list[0] = "This is a classic green shell style text!\0";
     list[1] = "This is a light green shell style text!\0";
@@ -75,6 +77,8 @@ int main() {
     list[5] = "String changes with bitshifting. \n\0";
     list[6] = "This is a lightrue color, the colors may not dispn the format `0xRRGGBBRRGGBB` (text c) \n\0";
     list[7] = "Programm skippt int part and finished\n\0";
+    uint64_t *ptrList = malloc((8 * sizeof(uint64_t)) + (8 * sizeof(char*)));
+    *ptrList = 
 
 #ifdef INT_TEST
     for (i = 1; i < 64; i = i + 2) {
