@@ -2,8 +2,15 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
+#include <string.h>
 
+#define SMALL_VALUES
+
+#ifdef SMALL_VALUES
+#define N 8888
+#else
 #define N 88888888  // Anzahl der Paare
+#endif
 
 // Variante 1: struct
 typedef struct {
@@ -27,7 +34,7 @@ int main(void) {
         sum1 += block->nums[i] + block->other[i];
     }
     clock_t end = clock();
-    printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    printf("%f strukt\n", (double)(end - start) / CLOCKS_PER_SEC);
     free(block);
 
     // --- Variante 2: Array von structs ---
@@ -44,7 +51,7 @@ int main(void) {
         sum2 += arr[i].a + arr[i].b;
     }
     end = clock();
-    printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    printf("%f arrayy von structs\n", (double)(end - start) / CLOCKS_PER_SEC);
     free(arr);
 
     // --- Variante 3: manuelles Layout ---
@@ -63,59 +70,59 @@ int main(void) {
         sum3 += nums[i] + other[i];
     }
     end = clock();
-    printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    printf("%f Manuelle Speicherverwaltung gleichgroße Blöcke\n", (double)(end - start) / CLOCKS_PER_SEC);
     free(mem);
 
     // --- Variante 4: List of strings and numbers
-    void *mem = malloc((N * sizeof(uint64_t)) + (N * sizeof(char*)));
-    if (!mem) {
+    void *memm = malloc((N * sizeof(uint64_t)) + (N * sizeof(char*)));
+    if (!memm) {
         perror("malloc failed");
         return 1;
     }
-    uint64_t *nums = (uint64_t*)mem;
-    char **strs = (char**)(nums + N);
+    uint64_t *nums2 = (uint64_t*)memm;
+    char **strs = (char**)(nums2 + N);
     for (int i = 0; i < N; i++) {
-        nums[i] = (uint64_t)(rand() & 0xFFFFFFFF);
+        nums2[i] = (uint64_t)(rand() & 0xFFFFFFFF);
         char buf[32];
         snprintf(buf, sizeof(buf), "val_%u", rand() & 0xFFFF);
         strs[i] = strdup(buf);
     }
-    clock_t start = clock();
-    uint64_t sum = 0;
+    start = clock();
+    uint64_t sum4 = 0;
     for (int i = 0; i < N; i++) {
-        sum += nums[i] + strlen(strs[i]);
+        sum4 += nums2[i] + strlen(strs[i]);
     }
-    clock_t end = clock();
-    printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    end = clock();
+    printf("%f array of *ptr of strings\n", (double)(end - start) / CLOCKS_PER_SEC);
     for (int i = 0; i < N; i++) {
         free(strs[i]);
     }
-    free(mem);
+    free(memm);
 
     //  --- Variante 5: List of strings and pointers
-    void *mem = malloc((N * sizeof(uint64_t)) + (N * sizeof(uint32_t*)));
-    if (!mem) {
+    void *memmo = malloc((N * sizeof(uint64_t)) + (N * sizeof(uint32_t*)));
+    if (!memmo) {
         perror("malloc failed");
         return 1;
     }
-    uint64_t *nums = (uint64_t*)mem;
-    uint32_t **strs = (uint32_t**)(nums + N);
+    uint64_t *nums3 = (uint64_t*)memmo;
+    uint32_t **strs3 = (uint32_t**)(nums3 + N);
     for (int i = 0; i < N; i++) {
-        nums[i] = (uint64_t)(rand() & 0xFFFFFFFF);
-        strs[i] = malloc(sizeof(uint32_t));
-        *strs[i] = (uint32_t)(rand() & 0xFFFFFFFF);
+        nums3[i] = (uint64_t)(rand() & 0xFFFFFFFF);
+        strs3[i] = malloc(sizeof(uint32_t));
+        *strs3[i] = (uint32_t)(rand() & 0xFFFFFFFF);
     }
-    clock_t start = clock();
-    uint64_t sum = 0;
+    start = clock();
+    uint64_t sum5 = 0;
     for (int i = 0; i < N; i++) {
-        sum += nums[i] + *strs[i];
+        sum5 += nums3[i] + *strs3[i];
     }
-    clock_t end = clock();
-    printf("%f\n", (double)(end - start) / CLOCKS_PER_SEC);
+    end = clock();
+    printf("%f array of 64bit and *ptr to 64bit\n", (double)(end - start) / CLOCKS_PER_SEC);
     for (int i = 0; i < N; i++) {
-        free(strs[i]);
+        free(strs3[i]);
     }
-    free(mem);
+    free(memmo);
     return 0;
 }
 
